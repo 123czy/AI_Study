@@ -1,4 +1,6 @@
 import type { Config } from 'tailwindcss'
+import forms from '@tailwindcss/forms'
+import animate from 'tailwindcss-animate'
 
 const config = {
   darkMode: ['class'],
@@ -89,7 +91,20 @@ const config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [
+    animate,
+    forms,
+    function ({ addComponents }: { addComponents: (components: Record<string, any>) => void }) {
+      addComponents({
+        '.btn': {
+          '@apply px-4 py-2 rounded-md text-white text-sm': {},
+        },
+        '.btn-primary': {
+          '@apply bg-brand hover:bg-brand-dark': {},
+        }
+      })
+    }
+  ],
 } satisfies Config
 
 export default config

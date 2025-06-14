@@ -1,0 +1,72 @@
+{
+    "main": [
+        {
+            "id": 1,
+            "title": "场景练习",
+            "description": "选择或自定义场景，生成地道的英语对话。支持：",
+            "image": "https://via.placeholder.com/150",
+            "tags": ["日常对话场景", "职场沟通场景", "自定义场景内容", "智能抽取英语短语"],
+            "link": "/Main/Scenes",
+            "button": "开始练习",
+            "type":"mini"
+        },
+        {
+            "id": 2,
+            "title": "发音纠错",
+            "description": "练习常用英语表达的发音。包含：",
+            "image": "https://via.placeholder.com/150",
+            "tags": ["常见口语缩读", "标准发音示例", "录音对比功能","详细发音要点"],
+            "link": "/Main/Voices",
+            "button": "练习发音",
+            "type":"mini"
+        },
+        {
+            "id": 3,
+            "title": "个性化设置",
+            "description": "根据你的需求自定义学习体验：",
+            "image": "https://via.placeholder.com/150",
+            "tags": ["选择 AI 模型（OpenAI/Gemini）", "设置发音语音和速度", "调整英语难度级别","配置 OpenAI 语音服务"],
+            "link": "/Main/Settings",
+            "button": "调整设置",
+            "type":"large"
+        }
+    ],
+    "scenes": [
+        {
+            "id": 1,
+            "title": "日常问候",
+            "description": "学习日常生活中的问候语和寒暄",
+            "link": "/daily",
+            "icon": "sun"
+        },
+        {
+            "id": 2,
+            "title": "自我介绍",
+            "description": "学习如何用英语介绍自己",
+            "link": "/self",
+            "icon": "person"
+        },
+        {
+            "id": 3,
+            "title": "工作面试",
+            "description": "掌握面试中的专业对话",
+            "link": "/work",
+            "icon": "keyboard"
+        },  
+        {
+            "id": 4,
+            "title": "闲聊话题",
+            "description": "日常生活话题轻松对话",
+            "link": "/chat",
+            "icon": "chat"
+        },
+        {
+            "id": 5,
+            "title": "旅行场景",
+            "description": "旅行中的实用对话",
+            "link": "/travel",
+            "icon": "backpack"
+        }
+    ]
+}
+  

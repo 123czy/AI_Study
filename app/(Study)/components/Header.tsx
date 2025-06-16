@@ -41,6 +41,7 @@ const Header = () => {
     { href: '/Main', label: '主页' },
     { href: '/Main/Scenes', label: '场景练习' },
     { href: '/Main/Voices', label: '发音纠错' },
+    { href: '/Main/Pictures', label: '拍照识图' },
     { href: '/Main/Setting', label: '设置' },
   ]
 

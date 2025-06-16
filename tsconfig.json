@@ -22,6 +22,7 @@
       "@/app/*": ["./app/(Kids)/*"],
       "@/Study/*": ["./app/(Study)/*"],
       "@/AI/*": ["./app/(AI)/*"],
+      "@/Meet/*": ["./app/(Meeting)/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

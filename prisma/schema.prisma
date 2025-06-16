@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+// 用户模型
+model User {
+    id        String            @id @default(uuid())
+    name      String
+    email     String            @unique
+    password  String
+    createdAt DateTime          @default(now())
+    updatedAt DateTime          @updatedAt
+    records   InterviewRecord[]
+
+    @@index([email])
+}
+
+// 面试会话模型
+model InterviewSession {
+    id             String    @id @default(uuid())
+    startTime      DateTime
+    endTime        DateTime?
+    status         String    @default("pending") // pending, active, paused, completed
+    currentStep    Int       @default(0)
+    totalDuration  Int       @default(0) // 总时长（秒）
+    pausedDuration Int       @default(0) // 暂停时长（秒）
+    notes          String?   @db.Text
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
+
+    // 面试相关信息
+    candidateName String?
+    position      String?
+    interviewer   String?
+
+    // 面试评分
+    technicalScore     Float?
+    communicationScore Float?
+    overallScore       Float?
+
+    // 面试记录
+    records InterviewRecord[]
+}
+
+// 面试记录模型
+model InterviewRecord {
+    id        String   @id @default(uuid())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+    sessionId String
+    step      Int // 当前步骤
+    content   String   @db.Text
+    timestamp DateTime @default(now())
+    type      String // question, answer, note
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    session InterviewSession @relation(fields: [sessionId], references: [id])
+
+    @@index([sessionId])
+}

@@ -6,6 +6,10 @@ const navItems = [
         href: '/Meet/info',
     },
     {
+        label: '公司信息',
+        href: '/Meet/company',
+    },
+    {
         label: '开始面试',
         href: '/Meet/Interview',
     },

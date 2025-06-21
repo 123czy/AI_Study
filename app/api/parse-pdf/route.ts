@@ -2,17 +2,26 @@ import { NextRequest, NextResponse } from 'next/server'
 import { writeFile } from 'fs/promises'
 import { join } from 'path'
 import pdfParse from 'pdf-parse'
+import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+
+
+const splitDocs = async (docs: any) => {
+    const textSplitter = new RecursiveCharacterTextSplitter({
+        chunkSize: 500,
+        chunkOverlap: 100,
+    })
+
+    const texts = await textSplitter.splitDocuments(docs)
+
+    return texts
+}
 
 export async function POST(request: NextRequest) {
     try {
         const data = await request.formData()
         const file: File | null = data.get('file') as unknown as File
 
-        console.log("Received file:", {
-            name: file?.name,
-            type: file?.type,
-            size: file?.size
-        })
 
         if (!file) {
             return NextResponse.json(
@@ -23,18 +32,28 @@ export async function POST(request: NextRequest) {
 
         // 将文件内容转换为 Buffer
         const bytes = await file.arrayBuffer()
-        const buffer = Buffer.from(bytes)
+        // const buffer = new Blob([bytes],{type: 'application/pdf'})
+        const buffer2 = Buffer.from(bytes)
 
-        console.log("Buffer size:", buffer.length)
+        const pdf = await pdfParse(buffer2)
+        const pdfData = pdf.text
 
-        // 使用 pdf-parse 解析 PDF 内容
-        const pdfData = await pdfParse(buffer)
 
-        console.log("PDF parsed successfully, text length:", pdfData.text.length)
+        // const loader = new WebPDFLoader(buffer, {
+        //     // required params = ...
+        //     // optional params = ...
+        // });
+
+        // const docs = await loader.load();
+
+        // const pdfData = docs[0].pageContent;
+
+        // const splitTextDocs = await splitDocs(docs)
+
 
         return NextResponse.json({
             success: true,
-            content: pdfData.text
+            content: pdfData
         })
 
     } catch (error) {
@@ -45,3 +64,4 @@ export async function POST(request: NextRequest) {
         )
     }
 } 
+

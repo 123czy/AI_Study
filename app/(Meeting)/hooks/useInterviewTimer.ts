@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { timelineConfig } from '../Meet/api/prompt'
+import { timelineConfig } from '../../api/chat/prompt'
 
 interface TimerData {
   sessionId: string

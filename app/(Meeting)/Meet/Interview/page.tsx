@@ -1,7 +1,7 @@
 'use client'
 
 import { InterviewTimeline } from '@/Meet/components/InterviewTimeline'
-
+import Chat from './chat'
 export default function InterviewPage() {
   return (
         <div className="container mx-auto p-6">
@@ -31,6 +31,9 @@ export default function InterviewPage() {
                 </p>
               </div>
             </div>
+          </div>
+          <div className="py-4 mx-auto ">
+            <Chat />
           </div>
         </div>
       </div>

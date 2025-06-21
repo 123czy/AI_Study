@@ -67,3 +67,27 @@ model InterviewRecord {
 
     @@index([sessionId])
 }
+
+model PdfDocument {
+    id         String   @id @default(cuid())
+    fileName   String
+    fileUrl    String
+    fileType   String // 'user' | 'require' | 'company' | 'questions'
+    fileSize   Int // in bytes
+    uploadedAt DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@map("pdf_documents")
+}
+
+model JobRequirement {
+    id         String   @id @default(cuid())
+    jobTitle   String
+    pdfUrl     String
+    pdfContent String   @db.Text
+    fileName   String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@map("job_requirements")
+}

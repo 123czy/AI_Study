@@ -1,7 +1,7 @@
 const RecordPage = () => {
     return (
         
-        <div className="lg:col-span-2 space-y-6">
+        <div className="mt-4 lg:col-span-2 space-y-6">
           {/* 面试记录区域 */}
           <div className="bg-card rounded-lg border p-6">
             <h2 className="text-xl font-semibold mb-4">面试记录</h2>

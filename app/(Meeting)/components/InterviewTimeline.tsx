@@ -1,7 +1,7 @@
 'use client'
 
 import { useInterviewTimer } from '../hooks/useInterviewTimer'
-import { timelineConfig } from '../Meet/api/prompt'
+import { timelineConfig } from '../../api/chat/prompt'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

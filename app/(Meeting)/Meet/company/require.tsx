@@ -6,11 +6,10 @@ import { z } from "zod"
 // import UploadPage from "../info/upload"
 import UploadPageContent from "@/Meet/components/uploader"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,35 +26,39 @@ const FormSchema = z.object({
   content: z.string().min(2, {
     message: "招聘要求不能为空.",
   }),
+  question: z.string().min(2, {
+    message: "题库不能为空.",
+  }),
 })
 
-export function RequireForm() {
+export function RequireForm({ onUploadSuccess }: { onUploadSuccess: () => void }) {
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const contentUploaderRef = useRef<{ reset: () => void } | null>(null)
+  const questionUploaderRef = useRef<{ reset: () => void } | null>(null)
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       jobTitle: "",
       content: "",
+      question: "",
     },
   })
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (!data.content) {
+    if (!data.content || !data.question) {
       toast({
         variant: "destructive",
-        title: "请先上传招聘要求文档",
+        title: "请先上传招聘要求文档和题库",
       })
       return
     }
 
-    console.log("form data", data)
-
     try {
       setIsSubmitting(true)
 
-      const response = await fetch('/api/parse-pdf', {
+      const response = await fetch('/api/job-requirements', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,6 +66,7 @@ export function RequireForm() {
         body: JSON.stringify({
           jobTitle: data.jobTitle,
           content: data.content,
+          question: data.question,
         }),
       })
       console.log("response",response)
@@ -71,13 +75,12 @@ export function RequireForm() {
         throw new Error(error.error || '提交失败')
       }
 
-      toast({
-        title: "提交成功",
-        description: "招聘要求已保存",
-      })
+      onUploadSuccess()
 
-      // 重置表单
+      // 重置表单和上传组件状态
       form.reset()
+      contentUploaderRef.current?.reset()
+      questionUploaderRef.current?.reset()
 
       // 可以选择跳转到其他页面
       // router.push('/some-path')
@@ -101,8 +104,16 @@ export function RequireForm() {
     })
   }
 
+  const handleQuestionUpload = (content: string) => {
+    form.setValue('question', content, {
+      shouldValidate: true,
+      shouldDirty: true,
+    })
+  }
+
   return (
     <Form {...form}>
+      
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
         <FormField
           control={form.control}
@@ -124,7 +135,26 @@ export function RequireForm() {
             <FormItem>
               <FormLabel>上传您的招聘要求</FormLabel>
               <FormControl>
-                <UploadPageContent onUploadSuccess={handlePdfUpload} />
+                <UploadPageContent 
+                  ref={contentUploaderRef}
+                  onUploadSuccess={handlePdfUpload} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="question"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>上传您的当前招聘岗位题库</FormLabel>
+              <FormControl>
+                <UploadPageContent 
+                  ref={questionUploaderRef}
+                  onUploadSuccess={handleQuestionUpload} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

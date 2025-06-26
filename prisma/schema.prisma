@@ -1,93 +1,97 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
-// 用户模型
 model User {
-    id        String            @id @default(uuid())
-    name      String
-    email     String            @unique
-    password  String
-    createdAt DateTime          @default(now())
-    updatedAt DateTime          @updatedAt
-    records   InterviewRecord[]
+  id        String            @id @default(uuid())
+  name      String
+  email     String            @unique
+  password  String
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  content   String            @db.Text
+  aiSummary String            @db.Text
+  records   InterviewRecord[]
 
-    @@index([email])
+  @@index([email])
 }
 
-// 面试会话模型
 model InterviewSession {
-    id             String    @id @default(uuid())
-    startTime      DateTime
-    endTime        DateTime?
-    status         String    @default("pending") // pending, active, paused, completed
-    currentStep    Int       @default(0)
-    totalDuration  Int       @default(0) // 总时长（秒）
-    pausedDuration Int       @default(0) // 暂停时长（秒）
-    notes          String?   @db.Text
-    createdAt      DateTime  @default(now())
-    updatedAt      DateTime  @updatedAt
-
-    // 面试相关信息
-    candidateName String?
-    position      String?
-    interviewer   String?
-
-    // 面试评分
-    technicalScore     Float?
-    communicationScore Float?
-    overallScore       Float?
-
-    // 面试记录
-    records InterviewRecord[]
+  id                 String            @id @default(uuid())
+  startTime          DateTime
+  endTime            DateTime?
+  status             String            @default("pending")
+  currentStep        Int               @default(0)
+  totalDuration      Int               @default(0)
+  pausedDuration     Int               @default(0)
+  notes              String?           @db.Text
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  candidateName      String?
+  position           String?
+  interviewer        String?
+  technicalScore     Float?
+  communicationScore Float?
+  overallScore       Float?
+  records            InterviewRecord[]
 }
 
-// 面试记录模型
 model InterviewRecord {
-    id        String   @id @default(uuid())
-    userId    String
-    user      User     @relation(fields: [userId], references: [id])
-    sessionId String
-    step      Int // 当前步骤
-    content   String   @db.Text
-    timestamp DateTime @default(now())
-    type      String // question, answer, note
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String           @id @default(uuid())
+  userId    String
+  sessionId String
+  step      Int
+  content   String           @db.Text
+  timestamp DateTime         @default(now())
+  type      String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  session   InterviewSession @relation(fields: [sessionId], references: [id])
+  user      User             @relation(fields: [userId], references: [id])
 
-    session InterviewSession @relation(fields: [sessionId], references: [id])
-
-    @@index([sessionId])
+  @@index([sessionId])
+  @@index([userId], map: "InterviewRecord_userId_fkey")
 }
 
 model PdfDocument {
-    id         String   @id @default(cuid())
-    fileName   String
-    fileUrl    String
-    fileType   String // 'user' | 'require' | 'company' | 'questions'
-    fileSize   Int // in bytes
-    uploadedAt DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+  id         String   @id @default(cuid())
+  fileName   String
+  fileUrl    String
+  fileType   String
+  fileSize   Int
+  uploadedAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-    @@map("pdf_documents")
+  @@map("pdf_documents")
 }
 
 model JobRequirement {
-    id         String   @id @default(cuid())
-    jobTitle   String
-    pdfUrl     String
-    pdfContent String   @db.Text
-    fileName   String
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+  id         String   @id @default(cuid())
+  jobTitle   String
+  pdfUrl     String
+  pdfContent String   @db.Text
+  fileName   String
+  questions  String   @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-    @@map("job_requirements")
+  @@map("job_requirements")
+}
+
+model InterViewer {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  jobTitle  String
+  content   String   @db.Text
+  aiSummary String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("interviewers")
 }

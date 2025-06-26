@@ -10,23 +10,23 @@
 */
 
 interface TimelineStep {
-    startTime: number;
-    endTime: number;
-    focus: string; // 聚焦的问题，例如项目、技术、代码、算法、非技术问题
-    prompt: string; // 提示语
-  }
-  
-  interface TimelineConfig {
-    steps: TimelineStep[];
-  }
-  
-  export const timelineConfig: TimelineConfig = {
-    steps: [
-      {
-        startTime: 0,
-        endTime: 3,
-        focus: '自我介绍',
-        prompt: `当前在自我介绍阶段，你要求候选人提供简历或者自我介绍，简历和介绍内容包括：
+  startTime: number
+  endTime: number
+  focus: string // 聚焦的问题，例如项目、技术、代码、算法、非技术问题
+  prompt: string // 提示语
+}
+
+interface TimelineConfig {
+  steps: TimelineStep[]
+}
+
+export const timelineConfig: TimelineConfig = {
+  steps: [
+    {
+      startTime: 0,
+      endTime: 3,
+      focus: '自我介绍',
+      prompt: `当前在自我介绍阶段，你要求候选人提供简历或者自我介绍，简历和介绍内容包括：
   1. 个人信息
   2. 教育背景
   3. 工作经历
@@ -36,19 +36,21 @@ interface TimelineStep {
   
   你首先根据<memory>的信息，判断候选人是否完成了介绍，如果没有完成，你询问并收集候选人缺失的信息，以便于后续的面试。
         `,
-      }, {
-        startTime: 3,
-        endTime: 10,
-        focus: '项目讨论',
-        prompt: `当前在项目讨论阶段，你要求候选人讨论他/她在项目中的表现。
+    },
+    {
+      startTime: 3,
+      endTime: 10,
+      focus: '项目讨论',
+      prompt: `当前在项目讨论阶段，你要求候选人讨论他/她在项目中的表现。
   
   你首先根据<memory>的信息，回顾 interviewSummary，针对你感兴趣的项目经历或技术细节，深入询问候选人，务必问出技术深度，以便于判断候选人整体的技术能力。
         `,
-      }, {
-        startTime: 10,
-        endTime: 17,
-        focus: '技术讨论',
-        prompt: `当前在技术讨论阶段，你要求候选人讨论他/她在技术方面的表现。
+    },
+    {
+      startTime: 10,
+      endTime: 17,
+      focus: '技术讨论',
+      prompt: `当前在技术讨论阶段，你要求候选人讨论他/她在技术方面的表现。
   
   如果你之前在和候选人讨论TA过往项目，你可以收尾，然后开始讨论前端工程师的技术栈和基础知识。
   
@@ -58,11 +60,12 @@ interface TimelineStep {
   
   你通过<memory>中的askedQuestions回溯之前的问题，以把控整体节奏。
         `,
-      }, {
-        startTime: 17,
-        endTime: 25,
-        focus: '代码和算法讨论',
-        prompt: `当前在代码和算法讨论阶段，你要求候选人讨论他/她在代码和算法方面的表现。
+    },
+    {
+      startTime: 17,
+      endTime: 25,
+      focus: '代码和算法讨论',
+      prompt: `当前在代码和算法讨论阶段，你要求候选人讨论他/她在代码和算法方面的表现。
   
   如果你之前在和候选人讨论前端技术栈和基础知识，你可以收尾，然后开始讨论代码问题和算法题。
   
@@ -71,12 +74,13 @@ interface TimelineStep {
   整体节奏上你先出一道简单的代码题，让候选人说出代码运行结果，然后你再出一道算法题，让候选人说出算法思路并给出答案。
   
   你通过<memory>中的askedQuestions回溯之前的问题，以把控整体节奏。
-  `
-      }, {
-        startTime: 25,
-        endTime: 30,
-        focus: '非技术问题讨论',
-        prompt: `当前在非技术问题讨论阶段，你要求候选人讨论他/她在软素质方面的表现。
+  `,
+    },
+    {
+      startTime: 25,
+      endTime: 30,
+      focus: '非技术问题讨论',
+      prompt: `当前在非技术问题讨论阶段，你要求候选人讨论他/她在软素质方面的表现。
   
   如果你之前在和候选人讨论代码和算法，你可以收尾，然后开始讨论非技术问题。
   
@@ -85,20 +89,22 @@ interface TimelineStep {
   整体节奏上你按照价值观、团队沟通协作、项目管理、时间管理、学习能力、沟通表达能力、解决问题能力、自我认知等顺序，逐个询问候选人。
   
   你通过<memory>中的askedQuestions回溯之前的问题，以把控整体节奏。
-  `
-      }, {
-        startTime: 30,
-        endTime: 32,
-        focus: '反问',
-        prompt: `当前在反问阶段，你要求候选人反问面试官，补充判断候选人对岗位是否有兴趣。
+  `,
+    },
+    {
+      startTime: 30,
+      endTime: 32,
+      focus: '反问',
+      prompt: `当前在反问阶段，你要求候选人反问面试官，补充判断候选人对岗位是否有兴趣。
   
   候选人提问后，你进行回答，如果候选人说没有问题了，你可以结束面试。
-  `
-      }, {
-        startTime: 32,
-        endTime: Infinity,
-        focus: '结束',
-        prompt: `当前在结束阶段，你礼貌地与候选人沟通，结束面试。`
-      }
-    ]
-  };
+  `,
+    },
+    {
+      startTime: 32,
+      endTime: Infinity,
+      focus: '结束',
+      prompt: `当前在结束阶段，你礼貌地与候选人沟通，结束面试。`,
+    },
+  ],
+}

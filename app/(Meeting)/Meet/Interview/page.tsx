@@ -2,7 +2,38 @@
 
 import { InterviewTimeline } from '@/Meet/components/InterviewTimeline'
 import Chat from './chat'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+interface InterviewInfo {
+  id: string
+  email: string
+  name: string
+  jobTitle: string
+  content: string
+  aiSummary: string
+}
 export default function InterviewPage() {
+  const searchParams = useSearchParams()
+  const [email, setEmail] = useState("")
+  const [interviewInfo, setInterviewInfo] = useState<InterviewInfo | null>(null)
+
+  const getInterviewRecord = async () => {
+    const email = searchParams.get("email")
+    const response = await fetch(`/api/interViewer?email=${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    const data = await response.json()
+    setInterviewInfo({
+      ...data.data,
+    })
+  }
+
+  useEffect(() => {
+    getInterviewRecord()
+  }, [])
   return (
         <div className="container mx-auto p-6">
       <div className="mb-6">
@@ -27,7 +58,15 @@ export default function InterviewPage() {
             <div className="space-y-4">
               <div className="p-4 bg-muted rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  候选人信息将在这里显示...
+                  <p className="text-sm text-muted-foreground">
+                    姓名：{interviewInfo?.name}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    岗位：{interviewInfo?.jobTitle}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    邮箱：{interviewInfo?.email}
+                  </p>
                 </p>
               </div>
             </div>

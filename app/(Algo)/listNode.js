@@ -132,3 +132,95 @@
 //     }
 //     return head
 // };
+
+// 反转链表
+
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
+ * }
+ */
+
+// function reverseList(head: ListNode | null): ListNode | null {
+//     let cur = head
+//     let pre = null
+
+//     while(cur !== null){
+//         let next = cur.next;
+//         cur.next = pre;
+
+//         pre = cur;
+//         // cur往前走一步
+//         cur = next;
+//     }
+//     返回头节点
+//     return pre;
+// };
+
+// 反转部分链表
+
+function reverseBetween(head, left, right) {
+  // 如果链表为空或者left等于right，无需反转
+  if (!head || left === right) {
+    return head
+  }
+
+  // 创建一个dummy节点，处理left=1的情况
+  const dummy = new ListNode(0)
+  dummy.next = head
+  let pre = dummy
+
+  // 找到要反转部分的前一个节点
+  for (let i = 0; i < left - 1; i++) {
+    pre = pre.next
+  }
+
+  // start是反转部分的起点
+  let start = pre.next
+  // then是start后面的节点
+  let then = start.next
+
+  // 反转left到right之间的节点
+  for (let i = 0; i < right - left; i++) {
+    start.next = then.next
+    then.next = pre.next
+    pre.next = then
+    then = start.next
+  }
+
+  return dummy.next
+}
+
+class ListNode {
+  constructor(val, next) {
+    this.val = val === undefined ? 0 : val
+    this.next = next === undefined ? null : next
+  }
+}
+
+// 测试用例
+const head = new ListNode(
+  1,
+  new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5))))
+)
+
+const result = reverseBetween(head, 2, 4)
+
+// 辅助函数：打印链表
+function printList(node) {
+  const values = []
+  while (node) {
+    values.push(node.val)
+    node = node.next
+  }
+  console.log(values.join(' -> '))
+}
+
+console.log('反转后的链表：')
+printList(result)

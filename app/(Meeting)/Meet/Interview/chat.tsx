@@ -10,10 +10,6 @@ import { Mic, SendIcon } from 'lucide-react';
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: '/api/chat',
-    headers: {
-      'Cache-Control': 'no-cache',
-      'Pragma': 'no-cache',
-    },
     onError: (error) => {
       console.error('Chat error:', error);
     },

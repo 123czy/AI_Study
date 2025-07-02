@@ -104,17 +104,27 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const id = searchParams.get('id')
+    const email = searchParams.get('email')
 
-    if (!id) {
+    if (!email) {
       return NextResponse.json(
-        { error: 'Missing id parameter' },
+        { error: 'Missing email parameter' },
         { status: 400 }
       )
     }
 
-    const interviewer = await prisma.interViewer.findUnique({
-      where: { id },
+    const interviewer = await prisma.interViewer.findFirst({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        jobTitle: true,
+        content: true,
+        aiSummary: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     })
 
     if (!interviewer) {

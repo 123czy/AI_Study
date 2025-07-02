@@ -1,4 +1,4 @@
-import UploadPage from "../info/upload"
+import UploadPage from "./upload"
 
 const InfoPage = () => {
     return <div>

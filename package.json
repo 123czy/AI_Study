@@ -6,7 +6,9 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check-env": "node scripts/check-env.js",
+    "test-memory": "node examples/anthropic-memory-test.js"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.1.6",
@@ -21,6 +23,7 @@
     "@hookform/resolvers": "^5.1.1",
     "@langchain/community": "^0.3.46",
     "@langchain/core": "^0.3.59",
+    "@mem0/vercel-ai-provider": "^1.0.7",
     "@prisma/client": "^6.9.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",

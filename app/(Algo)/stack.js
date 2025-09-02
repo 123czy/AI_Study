@@ -48,6 +48,48 @@ const isValid = (s) => {
 //     return tempList.length === 0;
 // };
 
-console.log(isValid('()'))
-console.log(isValid('()[]{}'))
-console.log(isValid('(]'))
+// console.log(isValid('()'))
+// console.log(isValid('()[]{}'))
+// console.log(isValid('(]'))
+
+// 使用stack实现一个队列
+class MyQueue {
+  stack
+  stack2
+  constructor() {
+    this.stack = []
+    this.stack2 = []
+  }
+
+  push(x) {
+    // 先将 stack2 中的所有元素移回 stack
+    while (this.stack2.length > 0) {
+      this.stack.push(this.stack2.pop())
+    }
+    // 添加新元素
+    this.stack.push(x)
+    // 将所有元素按顺序移到 stack2
+    while (this.stack.length > 0) {
+      this.stack2.push(this.stack.pop())
+    }
+  }
+
+  pop() {
+    return this.stack2.pop()
+  }
+
+  peek() {
+    return this.stack2[this.stack2.length - 1]
+  }
+
+  empty() {
+    return this.stack2.length === 0
+  }
+}
+
+const myQueue = new MyQueue()
+myQueue.push(1)
+myQueue.push(2)
+console.log(myQueue.peek())
+console.log(myQueue.pop())
+console.log(myQueue.empty())

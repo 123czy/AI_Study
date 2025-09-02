@@ -7,8 +7,22 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Play, Pause, RotateCcw, Clock, AlertCircle } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { useInterview } from '../Meet/context/InterviewContext'
+
+interface InterviewInfo {
+  id: string
+  email: string
+  name: string
+  jobTitle: string
+  content: string
+  aiSummary: string
+}
 
 export const InterviewTimeline = () => {
+  const searchParams = useSearchParams()
+  const { setCurrentInterviewId,setTriggerStartTimer,setTriggerPauseTimer } = useInterview()
   const {
     isRunning,
     elapsedTime,
@@ -27,6 +41,51 @@ export const InterviewTimeline = () => {
 
   const currentStepInfo = getCurrentStepInfo()
   const totalProgress = getTotalProgress()
+  const [interviewInfo, setInterviewInfo] = useState<InterviewInfo | null>(null)
+
+  const getInterviewRecord = async () => {
+    const email = searchParams.get("email")
+    const response = await fetch(`/api/interViewer?email=${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    const data = await response.json()
+    const interviewData = data.data
+    
+    // 先设置面试ID，因为这个是立即需要的
+    if (interviewData?.id) {
+      setCurrentInterviewId(interviewData.id)
+    }
+    
+    // 然后更新组件状态
+    setInterviewInfo(interviewData)
+  }
+
+  useEffect(() => {
+    getInterviewRecord()
+  }, [])
+
+   // 使用useCallback包装startTimer，避免无限循环
+   const memoizedStartTimer = useCallback(() => {
+    startTimer()
+  }, [startTimer])
+
+  // 注册startTimer方法到Context中，只在组件挂载时执行一次
+  useEffect(() => {
+    setTriggerStartTimer(memoizedStartTimer)
+  }, [setTriggerStartTimer, memoizedStartTimer])
+  
+  // 使用useCallback包装pauseTimer，避免无限循环
+  const memoizedPauseTimer = useCallback(() => {
+    pauseTimer()
+  }, [pauseTimer])
+
+  // 注册pauseTimer方法到Context中，只在组件挂载时执行一次
+  useEffect(() => {
+    setTriggerPauseTimer(memoizedPauseTimer)
+  }, [setTriggerPauseTimer, memoizedPauseTimer])
 
   return (
     <div className="space-y-6">
@@ -100,6 +159,25 @@ export const InterviewTimeline = () => {
           )}
         </CardContent>
       </Card>
+
+      <div className="bg-card rounded-lg border p-6">
+            <h2 className="text-xl font-semibold mb-4">候选人信息</h2>
+            <div className="space-y-4">
+              <div className="p-4 bg-muted rounded-lg">
+                <div className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
+                    姓名：{interviewInfo?.name}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    岗位：{interviewInfo?.jobTitle}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    邮箱：{interviewInfo?.email}
+                  </p>
+                </div>
+              </div>
+            </div>
+      </div>
 
       {/* 当前阶段信息 */}
       {currentStepInfo && (
